@@ -1,0 +1,61 @@
+﻿@model IEnumerable<KC_FinancialPortal.Models.Household>
+
+<div class="container-fluid ">
+    <div class="card shadow mb-4 border-bottom-primary">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Households</h6>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Greeting)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Created)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var house in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => house.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => house.Greeting)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => house.Created)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = house.Id }) |
+                            @Html.ActionLink("Details", "Details", new { id = house.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = house.Id })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            <hr/>
+            <div class="row pt-3">
+                <div class="col-6 text-center">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-info rounded-circle">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h6 class="button-text">To Dashboard</h6>
+                </div>
+                <div class="col-6 text-center">
+                    <a href="@Url.Action("Create", "Households")" value="Create" class="btn btn-success btn-circle">
+                        <i class="fas fa-check"></i>
+                    </a>
+                    <h6 class="button-text">Create Household</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
