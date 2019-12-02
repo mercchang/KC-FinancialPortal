@@ -179,9 +179,12 @@
     <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Enums\AccountType.cs" />
     <Compile Include="Enums\TransactionType.cs" />
+    <Compile Include="Extensions\InvitationExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\InvitationHelper.cs" />
+    <Compile Include="Helpers\RoleHelper.cs" />
     <Compile Include="Helpers\StringUtilities.cs" />
     <Compile Include="Helpers\UploadValidator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -2032,6 +2035,7 @@
     <Content Include="Scripts\jquery\jquery.slim.min.map" />
     <Content Include="Views\Account\Profile.cshtml" />
     <Content Include="Views\Manage\EditProfile.cshtml" />
+    <Content Include="Views\Account\AcceptInvitation.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

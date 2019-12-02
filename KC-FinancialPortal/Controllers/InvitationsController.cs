@@ -4,9 +4,12 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using KC_FinancialPortal.Extensions;
 using KC_FinancialPortal.Models;
+using Microsoft.AspNet.Identity;
 
 namespace KC_FinancialPortal.Controllers
 {
@@ -37,10 +40,19 @@ namespace KC_FinancialPortal.Controllers
         }
 
         // GET: Invitations/Create
+        [Authorize(Roles = "Head Of Household")]
         public ActionResult Create()
         {
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
-            return View();
+            var houseId = db.Users.Find(User.Identity.GetUserId()).HouseholdId ?? 0;
+            if (houseId == 0)
+                return RedirectToAction("Login", "Account");
+            var invitation = new Invitation
+            {
+                HouseholdId = houseId,
+                TTL = 7
+            };
+
+            return View(invitation);
         }
 
         // POST: Invitations/Create
@@ -48,16 +60,21 @@ namespace KC_FinancialPortal.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,IsValid,Created,Subject,Body,TTL,RecipientEmail,Code")] Invitation invitation)
+        public async Task<ActionResult> Create([Bind(Include = "HouseholdId,TTL,RecipientEmail")] Invitation invitation)
         {
             if (ModelState.IsValid)
             {
+                invitation.Created = DateTime.Now;
+                invitation.Code = Guid.NewGuid();
+                invitation.IsValid = true;
                 db.Invitations.Add(invitation);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                await invitation.EmailInvitation();
+
+                return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", invitation.HouseholdId);
             return View(invitation);
         }
 

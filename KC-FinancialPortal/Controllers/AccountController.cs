@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using KC_FinancialPortal.Models;
+using KC_FinancialPortal.Helpers;
 
 namespace KC_FinancialPortal.Controllers
 {
@@ -17,12 +18,14 @@ namespace KC_FinancialPortal.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +37,9 @@ namespace KC_FinancialPortal.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -120,7 +123,7 @@ namespace KC_FinancialPortal.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,8 +158,8 @@ namespace KC_FinancialPortal.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -170,6 +173,66 @@ namespace KC_FinancialPortal.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        //Accept Invitation
+        //GET
+        public ActionResult AcceptInvitation(string recipientEmail, string code)
+        {
+            var realGuid = Guid.Parse(code);
+            var invitation = db.Invitations.FirstOrDefault(i => i.RecipientEmail == recipientEmail && i.Code == realGuid);
+
+            if (invitation == null)
+                return View("NotFoundError", invitation);
+
+            var expirationDate = invitation.Created.AddDays(invitation.TTL);
+            if (invitation.IsValid && DateTime.Now < expirationDate)
+            {
+                var householdName = db.Households.Find(invitation.HouseholdId).Name;
+                ViewBag.Greeting = $"<center> Thank you for accepting my invitation to join {householdName}. </center> <br/> Thank";
+
+                var invitationVm = new AcceptInvitationViewModel
+                {
+                    Id = invitation.Id,
+                    Email = recipientEmail,
+                    Code = realGuid,
+                    HouseholdId = invitation.HouseholdId
+                };
+
+                return View(invitationVm);
+            }
+            return View("AcceptError", invitation);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AcceptInvitation(AcceptInvitationViewModel invitationVm)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    FirstName = invitationVm.FirstName,
+                    LastName = invitationVm.LastName,
+                    DisplayName = invitationVm.DisplayName,
+                    UserName = invitationVm.Email,
+                    Email = invitationVm.Email,
+                    AvatarPath = "/Avatars/default_user.png",
+                    HouseholdId = invitationVm.HouseholdId
+                };
+
+                var result = await UserManager.CreateAsync(user, invitationVm.Password);
+                if(result.Succeeded)
+                {
+                    //InvitationHelper.MarkAsInvalid(invitationVm.Id);
+                    roleHelper.AddUserToRole(user.Id, "Member");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            return View();
         }
 
         //
