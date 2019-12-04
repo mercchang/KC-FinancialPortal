@@ -12,6 +12,7 @@ namespace KC_FinancialPortal.Models
         public int HouseholdId { get; set; }
         public string OwnerId { get; set; }
         public string Name { get; set; }
+        public DateTime Created { get; set; }
         public AccountType AccountType { get; set; }
         public float StartingBalance { get; set; }
         public float CurrentBalance { get; set; }
@@ -25,7 +26,5 @@ namespace KC_FinancialPortal.Models
         {
             Transactions = new HashSet<Transaction>();
         }
-
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KC_FinancialPortal.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -142,5 +143,18 @@ namespace KC_FinancialPortal.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public class ConfigureViewModel
+    {
+        public int HouseholdId { get; set; }
+        public string BankName { get; set; }
+        public float StartingBalance { get; set; }
+        public float CurrentBalance { get; set; }
+        public AccountType AccountType { get; set; }
+        public string BudgetName { get; set; }
+        public float BudgetTarget { get; set; }
+        public string BudgetItemName { get; set; }
+        public float BudgetItemTarget { get; set; }
     }
 }

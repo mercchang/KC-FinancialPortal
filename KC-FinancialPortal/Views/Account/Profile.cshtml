@@ -1,5 +1,6 @@
 ﻿@using KC_FinancialPortal.Models
 @using Microsoft.AspNet.Identity
+@using KC_FinancialPortal.Helpers
 
 @{
     ViewBag.Title = "Profile";
@@ -8,9 +9,10 @@
 @{
     var db = new ApplicationDbContext();
     var user = db.Users.Find(User.Identity.GetUserId());
+    var roleHelper = new RoleHelper();
 }
 
-<div class="container-fluid">
+<div class="col-6 container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
@@ -22,23 +24,62 @@
             </div>
             <hr />
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     @if (user != null && user.AvatarPath == null)
                     {
-                        <img src="~/Avatars/default_user.png" alt="..." class="rounded-circle pr-1" width="100" />
+                        <img src="~/Avatars/default_user.png" alt="..." class="rounded-circle pr-1" width="200" />
                     }
                     else if (user != null)
                     {
-                        <img src="@user.AvatarPath" alt="..." class="rounded-circle pr-1" width="50" />
+                        <img src="@user.AvatarPath" alt="..." class="rounded-circle pr-1" width="200" />
                     }
-                    <a href="~/Manage/EditProfile">Edit Profile</a>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <ul style="list-style-type:none;">
                         <li>Username: @user.DisplayName</li>
                         <li>Email: @user.Email</li>
-                        <li></li>
+                        @if (user.HouseholdId != null)
+                        {
+                            <li>Household: @db.Households.Find(user.HouseholdId).Name</li>
+                        }
+                        else
+                        {
+                            <li>Household: None</li>
+                        }
+                        <li>Role: @roleHelper.GetRoleName(user.Id)</li>
                     </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col text-center">
+                    <div class="row">
+                        <div class="col">
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-info rounded-circle">
+                                <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="button-text small">To Dashboard</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-center">
+                    <div class="row">
+                        <div class="col">
+                            <a href="@Url.Action("EditProfile", "Account")" value="Create" class="btn btn-success btn-circle">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="button-text small">Edit Profile</h6>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

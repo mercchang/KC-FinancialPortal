@@ -54,6 +54,7 @@ namespace KC_FinancialPortal.Controllers
         {
             if (ModelState.IsValid)
             {
+                transaction.Created = DateTime.Now;
                 db.Transactions.Add(transaction);
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -17,7 +17,7 @@ namespace KC_FinancialPortal.Extensions
         {
             var Url = new UrlHelper(HttpContext.Current.Request.RequestContext);
             var callbackUrl = Url.Action("AcceptInvitation", "Account", new { recipientEmail = invitation.RecipientEmail, code = invitation.Code }, protocol: HttpContext.Current.Request.Url.Scheme);
-            var from = $"Financial Portal <{WebConfigurationManager.AppSettings["emailfrom"]}>";
+            var from = $"Financial Portal <{WebConfigurationManager.AppSettings["emailto"]}>";
 
             var emailMessage = new MailMessage(from, invitation.RecipientEmail)
             {
@@ -30,11 +30,11 @@ namespace KC_FinancialPortal.Extensions
             await svc.SendAsync(emailMessage);
         }
 
-        public static async Task MarkAsInvalid(this Invitation invitation)
-        {
-            var db = new ApplicationDbContext();
-        }
+        //public static async Task MarkAsInvalid(this Invitation invitation)
+        //{
+        //    var db = new ApplicationDbContext();
+
+
+        //}
     }
-
-
 }

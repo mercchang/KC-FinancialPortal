@@ -36,11 +36,11 @@ namespace KC_FinancialPortal.Controllers
             return View(bankAccount);
         }
 
+        [Authorize]
         // GET: BankAccounts/Create
         public ActionResult Create()
         {
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName");
             return View();
         }
 
@@ -49,7 +49,7 @@ namespace KC_FinancialPortal.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,OwnerId,Name,AccountType,StartingBalance,CurrentBalance")] BankAccount bankAccount)
+        public ActionResult Create([Bind(Include = "Id,Name,AccountType,StartingBalance,CurrentBalance")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace KC_FinancialPortal.Controllers
             }
 
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", bankAccount.OwnerId);
+            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FullName", bankAccount.OwnerId);
             return View(bankAccount);
         }
 

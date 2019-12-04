@@ -8,9 +8,20 @@
 
 /*  Left Nav-Bar   */
 .bg-gradient-navbar {
-    background-color: #4e73df;
     background-image: linear-gradient(180deg,#465276 10%,#4b66b6 100%);
-    background-size: cover
+    background-size: cover;
+    border-right: dotted;
+    border-right-color: #465276;
+}
+
+/*  top navbar  */
+.navbar {
+    background-color: #364268;
+}
+
+/*  main body div  */
+#wrapper #content-wrapper {
+    background-image: linear-gradient(180deg,#c3c3c3 10%,#fff 100%);
 }
 
 .bg-collapse {
