@@ -1,11 +1,21 @@
 ﻿@model KC_FinancialPortal.Models.Household
+@using KC_FinancialPortal.Models
+@using Microsoft.AspNet.Identity
+@using KC_FinancialPortal.Helpers
+
+@{
+    var db = new ApplicationDbContext();
+    var userId = db.Users.Find(User.Identity.GetUserId());
+    var roleHelper = new RoleHelper();
+    var role = roleHelper.GetRoleName(userId.Id);
+}
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-6">
             <div class="card shadow mb-4 border-bottom-primary">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">@Model.Name - Details</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.Name Details</h6>
                 </div>
                 <div class="card-body">
                     <div>
@@ -27,14 +37,25 @@
                             </dd>
                         </dl>
                     </div>
-                    <hr />
-                    <div class="form-group pt-2">
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
                         <div class="row pt-3">
                             <div class="col-6 text-center">
-                                <a href="@Url.Action("Index", "Home")" class="btn btn-info rounded-circle">
-                                    <i class="fas fa-arrow-left"></i>
-                                </a>
-                                <h6 class="button-text">Back to Dashboard</h6>
+                                @if (role == "Administrator")
+                                {
+                                    <a href="@Url.Action("Index", "Households")" class="btn btn-info rounded-circle">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </a>
+                                    <h6 class="button-text">To Households Index</h6>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Index", "Home")" class="btn btn-info rounded-circle">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </a>
+                                    <h6 class="button-text">Back to Dashboard</h6>
+                                }
                             </div>
                             <div class="col-6 text-center">
                                 <a href="@Url.Action("Edit", "Households", new { id = Model.Id })" value="Create" class="btn btn-warning btn-circle">
@@ -52,41 +73,44 @@
         <div class="col-6">
             <div class="card shadow mb-4 border-bottom-primary">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Household - Users</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Household Users</h6>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <tr>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Email
-                            </th>
-                            <th>
-                                UserName
-                            </th>
-                            <th></th>
-                        </tr>
-
+                    <table class="table table-bordered table-striped" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Username
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                            </tr>
+                        </thead>
                         @foreach (var user in Model.Users)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(house => user.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(house => user.Email)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(house => user.UserName)
-                                </td>
-                                @*<td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                                </td>*@
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(house => user.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(house => user.DisplayName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(house => user.Email)
+                                    </td>
+
+                                    @*<td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                    </td>*@
+                                </tr>
+                            </tbody>
                         }
 
                     </table>
@@ -95,3 +119,17 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#usersTable').DataTable(
+            {
+                "lengthMenu": [5, 10, 20, 30, 50]
+            });
+        });
+    </script>
+}

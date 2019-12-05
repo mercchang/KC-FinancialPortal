@@ -24,22 +24,22 @@ namespace KC_FinancialPortal.Helpers
             return (acctCount > 0 && budgetCount > 0 && itemCount > 0);
         }
 
-        //public string FindHouse(int householdId)
-        //{
-        //    var houseName = "";
-        //    if (householdId != 0)
-        //    {
-        //        houseName = db.Households.Find(householdId).Name;
-        //        if (houseName != null)
-        //            return (houseName);
-        //        else
-        //        {
-        //            houseName = "";
-        //            return (houseName);
-        //        }
-        //    }
-            
-        //    return (houseName);
-        //}
+        public string FindHouse(int householdId)
+        {
+            var houseName = "";
+            if (householdId != 0)
+            {
+                houseName = db.Households.Find(householdId).Name;
+                if (houseName != null)
+                    return (houseName);
+                else
+                {
+                    houseName = "";
+                    return (houseName);
+                }
+            }
+
+            return (houseName);
+        }
     }
 }

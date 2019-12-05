@@ -21,7 +21,7 @@ namespace KC_FinancialPortal.Models
         public virtual ApplicationUser Owner { get; set; }
 
         public virtual ICollection<Transaction> Transactions { get; set; }
-        
+
         public BankAccount()
         {
             Transactions = new HashSet<Transaction>();

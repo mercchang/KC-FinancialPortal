@@ -1805,7 +1805,6 @@
     <Content Include="Scripts\demo\chart-area-demo.js" />
     <Content Include="Scripts\demo\chart-bar-demo.js" />
     <Content Include="Scripts\demo\chart-pie-demo.js" />
-    <Content Include="Scripts\demo\datatables-demo.js" />
     <Content Include="Scripts\jquery-easing\jquery.easing.compatibility.js" />
     <Content Include="Scripts\jquery-easing\jquery.easing.js" />
     <Content Include="Scripts\jquery-easing\jquery.easing.min.js" />

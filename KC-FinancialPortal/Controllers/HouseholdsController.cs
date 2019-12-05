@@ -19,6 +19,7 @@ namespace KC_FinancialPortal.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private RoleHelper roleHelper = new RoleHelper();
 
+        [Authorize(Roles = "Admin")]
         // GET: Households
         public ActionResult Index()
         {
@@ -59,7 +60,7 @@ namespace KC_FinancialPortal.Controllers
                 household.Created = DateTime.Now;
                 household.Users.Add(db.Users.Find(User.Identity.GetUserId()));
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(household);
@@ -91,12 +92,13 @@ namespace KC_FinancialPortal.Controllers
             {
                 db.Entry(household).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Households", new { id = household.Id});
             }
             return View(household);
         }
 
         // GET: Households/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

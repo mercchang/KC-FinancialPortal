@@ -40,7 +40,7 @@
             <li>
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="~/Home/Index">
                     <div class="sidebar-brand-icon rotate-n-15">
-                        <i class="fas fa-"></i>
+                        <i class="fas fa-piggy-bank"></i>
                     </div>
                     <div class="sidebar-brand-text mx-3">Financial Portal</div>
                 </a>
@@ -79,7 +79,7 @@
                     <div class="bg-collapse py-2 collapse-inner rounded">
                         @if (User.IsInRole("Admin"))
                         {
-                        <a class="collapse-item" href="@Url.Action("Index","Households")">Index</a>
+                            <a class="collapse-item" href="@Url.Action("Index","Households")">Index</a>
                         }
                         @if (user.HouseholdId != null)
                         {
@@ -345,6 +345,8 @@
     <script src="~/Scripts/jquery/jquery.min.js"></script>
     <script src="~/Scripts/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <script scr="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
+
     <!-- Core plugin JavaScript-->
     <script src="~/Scripts/jquery-easing/jquery.easing.min.js"></script>
 
@@ -358,7 +360,7 @@
     <script src="~/Scripts/demo/chart-area-demo.js"></script>
     <script src="~/Scripts/demo/chart-pie-demo.js"></script>
 
-    @RenderSection("scripts", required: false);
+    @RenderSection("scripts", required: false)
 
 </body>
 

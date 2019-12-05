@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
+using static KC_FinancialPortal.EmailService;
 
 namespace KC_FinancialPortal.Helpers
 {
@@ -39,10 +40,10 @@ namespace KC_FinancialPortal.Helpers
         {
             try
             {
-                var senderEmail = $"Bugtracker Admin<{ConfiguredEmail}>";
+                var senderEmail = $"Financial Portal Admin<{ConfiguredEmail}>";
                 var mailMsg = new MailMessage(senderEmail, model.Email)
                 {
-                    Subject = "Confirm your accout",
+                    Subject = "Confirm your account",
                     Body = $"Please confirm your account by clicking <a href=\"{callbackUrl}\">here</a>",
                     IsBodyHtml = true
                 };
@@ -61,7 +62,7 @@ namespace KC_FinancialPortal.Helpers
         {
             try
             {
-                var senderEmail = $"Bugtracker Admin<{ConfiguredEmail}>";
+                var senderEmail = $"Financial Portal Admin<{ConfiguredEmail}>";
                 var mailMsg = new MailMessage(senderEmail, model.Email)
                 {
                     Subject = "Reset Password",

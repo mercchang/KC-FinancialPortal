@@ -69,7 +69,6 @@ namespace KC_FinancialPortal.Helpers
             return userManager.GetRoles(userId).FirstOrDefault().Contains("Demo");
         }
 
-        // Gets the role name and removes "Demo" from the demo role name, and also adds a space between project manager
         public string GetRoleName(string userId)
         {
             var userRole = userManager.GetRoles(userId).FirstOrDefault().ToString();
