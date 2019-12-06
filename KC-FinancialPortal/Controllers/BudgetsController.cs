@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using KC_FinancialPortal.Models;
+using Microsoft.AspNet.Identity;
 
 namespace KC_FinancialPortal.Controllers
 {
@@ -40,7 +41,7 @@ namespace KC_FinancialPortal.Controllers
         public ActionResult Create()
         {
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName");
+            ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName");
             return View();
         }
 
@@ -51,15 +52,20 @@ namespace KC_FinancialPortal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,HouseholdId,OwnerId,Created,Name,TargetAmount,CurrentAmount")] Budget budget)
         {
+            var user = db.Users.Find(User.Identity.GetUserId());
             if (ModelState.IsValid)
             {
+                budget.CurrentAmount = budget.TargetAmount;
+                budget.HouseholdId = user.HouseholdId.Value;
+                budget.OwnerId = user.Id;
+                budget.Created = DateTime.Now;
                 db.Budgets.Add(budget);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budget.HouseholdId);
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", budget.OwnerId);
+            ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName", budget.OwnerId);
             return View(budget);
         }
 
@@ -76,7 +82,7 @@ namespace KC_FinancialPortal.Controllers
                 return HttpNotFound();
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budget.HouseholdId);
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", budget.OwnerId);
+            ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName", budget.OwnerId);
             return View(budget);
         }
 
@@ -94,7 +100,7 @@ namespace KC_FinancialPortal.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budget.HouseholdId);
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", budget.OwnerId);
+            ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName", budget.OwnerId);
             return View(budget);
         }
 

@@ -29,6 +29,7 @@
         var db = new ApplicationDbContext();
         var user = db.Users.Find(User.Identity.GetUserId());
         var houseHelper = new HouseholdHelper();
+        
     }
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -53,9 +54,9 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="@Url.Action("Index", "Home")">
+                <a class="nav-link" href="@Url.Action("Details", "Households", new { id = user.HouseholdId})">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
+                    <span>@houseHelper.FindHouse(user.HouseholdId.Value)</span>
                 </a>
             </li>
             <li>
@@ -91,7 +92,11 @@
                                 <a class="collapse-item" href="@Url.Action("Configure","Households", new { id = user.HouseholdId })">Configure</a>
                             }
                         }
-                        <a class="collapse-item" href="@Url.Action("Create","Households")">Create New</a>
+                        else
+                        {
+                            <a class="collapse-item" href="@Url.Action("Create","Households")">Create New</a>
+                        }
+                        
                     </div>
                 </div>
             </li>
@@ -104,8 +109,8 @@
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-collapse py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="~/BankAccounts/Create">Add Bank Account</a>
                         <a class="collapse-item" href="~/BankAccounts/Index">View All Bank Accounts</a>
+                        <a class="collapse-item" href="~/BankAccounts/Create">Add Bank Account</a>
                     </div>
                 </div>
             </li>
@@ -114,17 +119,30 @@
                 <hr class="sidebar-divider">
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBudgets" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Budgets</span>
+                </a>
+                <div id="collapseBudgets" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-collapse py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="~/Budgets/Index">View All Budgets</a>
+                        <a class="collapse-item" href="~/Budgets/Create">Create New Budget</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransactions" aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-money-bill"></i>
                     <span>Transactions</span>
                 </a>
                 <div id="collapseTransactions" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-collapse py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="~/Transactions/Create">Create New Transaction</a>
                         <a class="collapse-item" href="~/Transactions/Index">View All Transactions</a>
+                        <a class="collapse-item" href="~/Transactions/Create">Create New Transaction</a>
                     </div>
                 </div>
             </li>
+            
             <li class="text-center">
                 <!-- Sidebar Toggler (Sidebar) -->
                 <div class="text-center d-none d-md-inline">
@@ -195,7 +213,7 @@
                         </li>
 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <li class="nav-item dropdown no-arrow mx-1 pr-2">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
@@ -250,10 +268,6 @@
                             </div>
                         </li>
 
-                        <li>
-                            <div class="topbar-divider d-none d-sm-block"></div>
-                        </li>
-
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -292,7 +306,7 @@
 
     @*Modal - Leave Household*@
     <div class="modal fade" id="ModalLeave">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content border-bottom-danger">
                 <div class="modal-header">
                     <h4 class="modal-title">Leave Household?</h4>

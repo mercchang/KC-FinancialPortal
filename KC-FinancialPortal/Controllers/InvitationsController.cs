@@ -40,7 +40,7 @@ namespace KC_FinancialPortal.Controllers
         }
 
         // GET: Invitations/Create
-        [Authorize(Roles = "Head Of Household")]
+        [Authorize]
         public ActionResult Create()
         {
             var houseId = db.Users.Find(User.Identity.GetUserId()).HouseholdId ?? 0;

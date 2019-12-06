@@ -1,66 +1,200 @@
 ﻿@model KC_FinancialPortal.Models.Budget
 
-@{
-    ViewBag.Title = "Details";
-}
 
-<h2>Details</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            <div class="card shadow mb-4 border-bottom-primary">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.Name - Budget Details</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Household.Name)
+                        </dt>
 
-<div>
-    <h4>Budget</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Household.Name)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Household.Name)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Household.Name)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Owner.FirstName)
+                        </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Owner.FirstName)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Owner.FirstName)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Owner.FirstName)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Created)
+                        </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Created)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Created)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.TargetAmount)
+                        </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TargetAmount)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.TargetAmount)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TargetAmount)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.CurrentAmount)
+                        </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CurrentAmount)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.CurrentAmount)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card shadow mb-4 border-bottom-primary">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Budget Items</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="budgetItemsTable" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Created
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
 
-        <dd>
-            @Html.DisplayFor(model => model.CurrentAmount)
-        </dd>
+                            @foreach (var item in Model.BudgetItems)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CurrentAmount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
 
-    </dl>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-4 border-bottom-primary">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="transactionsTable" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Bank Account Owner
+                                    </th>
+                                    <th>
+                                        Item
+                                    </th>
+                                    <th>
+                                        Transaction Type
+                                    </th>
+                                    <th>
+                                        Created
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            @foreach (var transaction in Model.Transactions)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.BankAccount.OwnerId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.BudgetItem.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.TransactionType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.Created)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.Amount)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = transaction.Id }) |
+                                            @Html.ActionLink("Details", "Details", new { id = transaction.Id }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = transaction.Id })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+@section scripts{
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#budgetItemsTable').DataTable(
+                {
+                    "lengthMenu": [5, 10, 20, 30, 50]
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#transactionsTable').DataTable(
+                {
+                    "lengthMenu": [5, 10, 20, 30, 50]
+                });
+        });
+    </script>
+}

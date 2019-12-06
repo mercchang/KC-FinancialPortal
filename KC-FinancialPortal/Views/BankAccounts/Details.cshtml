@@ -2,65 +2,178 @@
 
 @{
     ViewBag.Title = "Details";
+    // Show transactions
 }
 
-<h2>Details</h2>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card shadow mb-4 border-bottom-primary">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">@Model.Name Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <dl class="col dl-horizontal">
+                                <dt>
+                                    Household Name
+                                </dt>
 
-<div>
-    <h4>BankAccount</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Household.Name)
-        </dt>
+                                <dd>
+                                    @Html.DisplayFor(model => model.Household.Name)
+                                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Household.Name)
-        </dd>
+                                <dt>
+                                    Account Owner
+                                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Owner.FirstName)
-        </dt>
+                                <dd>
+                                    @Html.DisplayFor(model => model.Owner.FullName)
+                                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Owner.FirstName)
-        </dd>
+                                <dt>
+                                    Bank Name
+                                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                                <dd>
+                                    @Html.DisplayFor(model => model.Name)
+                                </dd>
+                            </dl>
+                            <dl class="col dl-horizontal">
+                                <dt>
+                                    Account Type
+                                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                                <dd>
+                                    @Html.DisplayFor(model => model.AccountType)
+                                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AccountType)
-        </dt>
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.StartingBalance)
+                                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.AccountType)
-        </dd>
+                                <dd>
+                                    @Html.DisplayFor(model => model.StartingBalance)
+                                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartingBalance)
-        </dt>
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.CurrentBalance)
+                                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.StartingBalance)
-        </dd>
+                                <dd>
+                                    @Html.DisplayFor(model => model.CurrentBalance)
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <div class="row pt-3">
+                                <div class="col-6 text-center">
+                                    <a href="@Url.Action("Index", "BankAccounts")" class="btn btn-info rounded-circle">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </a>
+                                    <h6 class="button-text">to Bank Accounts</h6>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <a href="@Url.Action("Edit", "BankAccounts", new { id = Model.Id })" value="Create" class="btn btn-warning btn-circle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <h6 class="button-text">Edit Bank Account</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CurrentBalance)
-        </dt>
+        @*---------- Transaction List ----------*@
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4 border-bottom-primary">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-bordered table-striped" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        OwnerId
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        FirstName
+                                    </th>
+                                    <th>
+                                        Transaction Type
+                                    <th>
+                                        Created
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Memo
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            @foreach (var transaction in Model.Transactions)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.BankAccount.OwnerId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.BudgetItem.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.Owner.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.TransactionType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.Created)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.Amount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => transaction.Memo)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = transaction.Id }) |
+                                            @Html.ActionLink("Details", "Details", new { id = transaction.Id }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = transaction.Id })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
 
-        <dd>
-            @Html.DisplayFor(model => model.CurrentBalance)
-        </dd>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    </div>
+
+@section scripts{
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#transactionsTable').DataTable(
+            {
+                "lengthMenu": [5, 10, 20, 30, 50]
+            });
+        });
+    </script>
+}

@@ -18,7 +18,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">@Model.Name Details</h6>
                 </div>
                 <div class="card-body">
-                    <div>
+                    <div class="">
                         <dl class="dl-horizontal">
                             <dt>
                                 @Html.DisplayNameFor(model => model.Greeting)
@@ -69,11 +69,11 @@
             </div>
         </div>
 
-        @*---------- User List ----------*@
+        @*---------- Member List ----------*@
         <div class="col-6">
             <div class="card shadow mb-4 border-bottom-primary">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Household Users</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Household Members</h6>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-striped" id="usersTable">
@@ -88,6 +88,11 @@
                                 <th>
                                     Email
                                 </th>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("HeadOfHousehold"))
+                                {
+                                    <th></th>
+                                }
+                                
                             </tr>
                         </thead>
                         @foreach (var user in Model.Users)
@@ -103,12 +108,13 @@
                                     <td>
                                         @Html.DisplayFor(house => user.Email)
                                     </td>
-
-                                    @*<td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                                    </td>*@
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("HeadOfHousehold"))
+                                    {
+                                        <td>
+                                            Remove Member
+                                            @*@Html.ActionLink("Remove Member", "Delete", new { id = user.Id })*@
+                                        </td>
+                                    }
                                 </tr>
                             </tbody>
                         }

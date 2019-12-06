@@ -59,10 +59,10 @@ namespace KC_FinancialPortal.Controllers
                 db.Households.Add(household);
                 household.Created = DateTime.Now;
                 household.Users.Add(db.Users.Find(User.Identity.GetUserId()));
+                roleHelper.AddUserToRole(User.Identity.GetUserId(), "HeadOfHousehold");
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
-
             return View(household);
         }
 
