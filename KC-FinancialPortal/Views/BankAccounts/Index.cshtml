@@ -1,4 +1,12 @@
 ﻿@model IEnumerable<KC_FinancialPortal.Models.BankAccount>
+@using KC_FinancialPortal.Models
+@using Microsoft.AspNet.Identity
+
+@{
+    var db = new ApplicationDbContext();
+    var user = db.Users.Find(User.Identity.GetUserId());
+
+}
 
 <div class="container-fluid">
     <div class="card shadow mb-4">
@@ -38,7 +46,7 @@
                         </tr>
                     </thead>
 
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.Where(m => m.HouseholdId == user.HouseholdId))
                     {
                         <tbody>
                             <tr>

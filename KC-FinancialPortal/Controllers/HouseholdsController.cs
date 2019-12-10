@@ -141,7 +141,7 @@ namespace KC_FinancialPortal.Controllers
 
             switch(myRole)
             {
-                case "Head Of Household":
+                case "HeadOfHousehold":
                     var inhabitants = db.Users.Where(u => u.HouseholdId == user.HouseholdId).Count();
                     if(inhabitants > 1)
                     {
@@ -152,13 +152,13 @@ namespace KC_FinancialPortal.Controllers
 
                     //User is removed from household
                     user.HouseholdId = null;
-                    
+                    //Role removed from user
+                    roleHelper.RemoveUserFromRole(userId, "HeadOfHousehold");
+
                     //Household is deleted
                     db.Households.Remove(household);
                     db.SaveChanges();
 
-                    //Role removed from user
-                    roleHelper.RemoveUserFromRole(userId, "Head Of Household");
                     await ControllerContext.HttpContext.RefreshAuthentication(user);
 
                     return RedirectToAction("Index", "Home");
@@ -166,8 +166,8 @@ namespace KC_FinancialPortal.Controllers
                 case "Member":
                 default:
                     user.HouseholdId = null;
-                    db.SaveChanges();
                     roleHelper.RemoveUserFromRole(userId, "Member");
+                    db.SaveChanges();
                     await ControllerContext.HttpContext.RefreshAuthentication(user);
                     return RedirectToAction("Index", "Home");
             }

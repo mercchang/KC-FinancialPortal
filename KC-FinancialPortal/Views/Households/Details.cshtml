@@ -128,7 +128,7 @@
         <div class="col">
             <div class="card shadow mb-4 border-bottom-primary">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Bank Accounts in Hosuehold</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Bank Accounts in Household</h6>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-striped" id="accountsTable">
@@ -184,9 +184,9 @@
                                     @if (User.IsInRole("Administrator") || role == "Head Of Household")
                                     {
                                         <td>
-                                            @Url.Action("Edit", "BankAccounts", new { id = account.Id }) |
-                                            @Url.Action("Details", "BankAccounts", new { id = account.Id }) |
-                                            @Url.Action("Delete", "BankAccounts", new { id = account.Id })
+                                            <a href="@Url.Action("Edit", "BankAccounts", new { id = account.Id })">Edit</a> |
+                                            <a href="@Url.Action("Details", "BankAccounts", new { id = account.Id })">Details</a> |
+                                            <a href="@Url.Action("Delete", "BankAccounts", new { id = account.Id })">Delete</a>
                                         </td>
                                     }
                                 </tr>
