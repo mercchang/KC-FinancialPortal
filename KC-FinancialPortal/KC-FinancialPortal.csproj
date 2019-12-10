@@ -2042,10 +2042,10 @@
     <Content Include="Scripts\jquery\jquery.min.map" />
     <Content Include="Scripts\jquery\jquery.slim.min.map" />
     <Content Include="Views\Account\Profile.cshtml" />
-    <Content Include="Views\Manage\EditProfile.cshtml" />
     <Content Include="Views\Account\AcceptInvitation.cshtml" />
     <Content Include="private.config" />
     <Content Include="Views\Households\Configure.cshtml" />
+    <Content Include="Views\BankAccounts\EditBalance.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

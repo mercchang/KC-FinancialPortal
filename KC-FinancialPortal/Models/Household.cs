@@ -17,6 +17,7 @@ namespace KC_FinancialPortal.Models
         public virtual ICollection<ApplicationUser> Users { get; set; }
         public virtual ICollection<BankAccount> BankAccounts { get; set; }
         public virtual ICollection<Budget> Budgets { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
 
         public Household()
         {
@@ -25,6 +26,7 @@ namespace KC_FinancialPortal.Models
             Users = new HashSet<ApplicationUser>();
             BankAccounts = new HashSet<BankAccount>();
             Budgets = new HashSet<Budget>();
+            Transactions = new HashSet<Transaction>();
         }
 
     }

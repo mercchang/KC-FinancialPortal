@@ -1,0 +1,44 @@
+﻿@model KC_FinancialPortal.Models.BankAccount
+
+<div class="col-6 container-fluid">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.HouseholdId)
+        @Html.HiddenFor(model => model.LowBalance)
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CurrentBalance, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CurrentBalance, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CurrentBalance, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <a href="@Url.Action("Details", "Households", new { id = Model.HouseholdId })" class="btn btn-info rounded-circle">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <h6 class="button-text small">Back</h6>
+                    </div>
+                    <div class="col-6 text-center">
+                        <button type="submit" value="Save" class="btn btn-success btn-circle">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <h6 class="button-text small">Save</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

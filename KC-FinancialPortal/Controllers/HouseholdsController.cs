@@ -59,6 +59,7 @@ namespace KC_FinancialPortal.Controllers
                 db.Households.Add(household);
                 household.Created = DateTime.Now;
                 household.Users.Add(db.Users.Find(User.Identity.GetUserId()));
+                roleHelper.RemoveUserFromRole(User.Identity.GetUserId(), "UnAssigned");
                 roleHelper.AddUserToRole(User.Identity.GetUserId(), "HeadOfHousehold");
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
@@ -119,6 +120,12 @@ namespace KC_FinancialPortal.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Household household = db.Households.Find(id);
+            var accts = db.BankAccounts.Where(b => b.Id == household.Id);
+            
+            // Delete all bank accounts in this household
+            foreach (var bank in household.BankAccounts)
+                db.BankAccounts.Remove(bank);
+
             db.Households.Remove(household);
             db.SaveChanges();
             return RedirectToAction("Index", "Home");
@@ -140,10 +147,13 @@ namespace KC_FinancialPortal.Controllers
                     {
                         TempData["Message"] = $"You are unable to leave the Household at this time. There are still <b>{inhabitants}</b> people in this Household.";
                     }
+
+                    Household household = db.Households.Find(user.HouseholdId);
+
                     //User is removed from household
                     user.HouseholdId = null;
+                    
                     //Household is deleted
-                    Household household = db.Households.Find(user.HouseholdId);
                     db.Households.Remove(household);
                     db.SaveChanges();
 
@@ -225,6 +235,24 @@ namespace KC_FinancialPortal.Controllers
                 return View();
             }
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult ChooseSuccessor(string newHead)
+        //{
+        //    if (string.IsNullOrEmpty(newHead))
+        //        return RedirectToAction("Dashboard");
+
+        //    //remove user from head
+        //    roleHelper.RemoveUserFromRole(User.Identity.GetUserId(), "HeadOfHousehold");
+        //    await ControllerContext.HttpContext.RefreshAuthentication(me);
+
+        //    roleHelper.RemoveUserFromRole(newHead, "Member");
+
+        //    roleHelper.AddUserToRole(newHead, "HeadOfHousehold");
+
+        //    return RedirectToAction("Dashboard");
+        //}
 
         protected override void Dispose(bool disposing)
         {

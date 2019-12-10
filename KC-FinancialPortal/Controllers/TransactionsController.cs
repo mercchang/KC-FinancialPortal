@@ -45,6 +45,7 @@ namespace KC_FinancialPortal.Controllers
             ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "OwnerId");
             ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name");
             ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName");
+
             return View();
         }
 

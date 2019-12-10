@@ -86,7 +86,7 @@ namespace KC_FinancialPortal.Controllers
                 return HttpNotFound();
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", bankAccount.OwnerId);
+            //ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", bankAccount.OwnerId);
             return View(bankAccount);
         }
 
@@ -95,7 +95,7 @@ namespace KC_FinancialPortal.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,HouseholdId,OwnerId,Name,AccountType,StartingBalance,CurrentBalance")] BankAccount bankAccount)
+        public ActionResult Edit([Bind(Include = "Id,HouseholdId,OwnerId,Created,Name,AccountType,StartingBalance,CurrentBalance,LowBalance")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
@@ -104,7 +104,38 @@ namespace KC_FinancialPortal.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
-            ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", bankAccount.OwnerId);
+            //ViewBag.OwnerId = new SelectList(db.ApplicationUsers, "Id", "FirstName", bankAccount.OwnerId);
+            return View(bankAccount);
+        }
+
+        //GET
+        public ActionResult EditBalance(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            BankAccount bankAccount = db.BankAccounts.Find(id);
+            if (bankAccount == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
+            return View(bankAccount);
+        }
+
+        //Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditBalance([Bind(Include = "CurrentBalance")] BankAccount bankAccount, float balance)
+        {
+            if (ModelState.IsValid)
+            {
+                bankAccount.CurrentBalance = balance;
+                db.Entry(bankAccount).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View(bankAccount);
         }
 

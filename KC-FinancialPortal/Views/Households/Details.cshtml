@@ -88,11 +88,11 @@
                                 <th>
                                     Email
                                 </th>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("HeadOfHousehold"))
+                                @if (User.IsInRole("Administrator") || role == "Head Of Household")
                                 {
                                     <th></th>
                                 }
-                                
+
                             </tr>
                         </thead>
                         @foreach (var user in Model.Users)
@@ -108,7 +108,7 @@
                                     <td>
                                         @Html.DisplayFor(house => user.Email)
                                     </td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("HeadOfHousehold"))
+                                    @if (User.IsInRole("Administrator") || role == "Head Of Household")
                                     {
                                         <td>
                                             Remove Member
@@ -124,6 +124,80 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-4 border-bottom-primary">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Bank Accounts in Hosuehold</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped" id="accountsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Account Name
+                                </th>
+                                <th>
+                                    Created On
+                                </th>
+                                <th>
+                                    Account Type
+                                </th>
+                                <th>
+                                    Starting Balance
+                                </th>
+                                <th>
+                                    Current Balance
+                                </th>
+                                <th>
+                                    Low Balance Warning
+                                </th>
+                                @if (User.IsInRole("Administrator") || role == "Head Of Household")
+                                {
+                                    <th></th>
+                                }
+
+                            </tr>
+                        </thead>
+                        @foreach (var account in Model.BankAccounts)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(h => account.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(h => account.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(h => account.AccountType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(h => account.StartingBalance)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(h => account.CurrentBalance)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(h => account.LowBalance)
+                                    </td>
+                                    @if (User.IsInRole("Administrator") || role == "Head Of Household")
+                                    {
+                                        <td>
+                                            @Url.Action("Edit", "BankAccounts", new { id = account.Id }) |
+                                            @Url.Action("Details", "BankAccounts", new { id = account.Id }) |
+                                            @Url.Action("Delete", "BankAccounts", new { id = account.Id })
+                                        </td>
+                                    }
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    </div>
 </div>
 
 @section scripts{
@@ -133,9 +207,18 @@
     <script>
         $(document).ready(function () {
             $('#usersTable').DataTable(
-            {
-                "lengthMenu": [5, 10, 20, 30, 50]
-            });
+                {
+                    "lengthMenu": [5, 10, 20, 30, 50]
+                });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#accountsTable').DataTable(
+                {
+                    "lengthMenu": [5, 10, 20, 30, 50]
+                });
         });
     </script>
 }

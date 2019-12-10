@@ -1,10 +1,17 @@
 ﻿@using KC_FinancialPortal.Models
 @using Microsoft.AspNet.Identity
+@using KC_FinancialPortal.Helpers
 
 @{
     var db = new ApplicationDbContext();
     var user = db.Users.Find(User.Identity.GetUserId());
-    // show current balance, recent transactions, monthly spending graphs...
+    if (user.HouseholdId != null)
+    {
+        var house = db.Households.Where(h => h.Id == user.HouseholdId).FirstOrDefault();
+        var transactions = db.Transactions.Where(t => t.BankAccount.HouseholdId == house.Id).ToList();
+    }
+
+    // show current balance, recent transactions list, monthly spending graphs...
 }
 
     <div class="container-fluid">
@@ -47,7 +54,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Current Balance</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">@db.Households.Where(h => h.Id == user.HouseholdId).FirstOrDefault()</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-calendar fa-2x text-gray-300"></i>

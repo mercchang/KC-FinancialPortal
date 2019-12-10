@@ -28,8 +28,9 @@
     @{
         var db = new ApplicationDbContext();
         var user = db.Users.Find(User.Identity.GetUserId());
+
         var houseHelper = new HouseholdHelper();
-        
+
     }
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -54,9 +55,9 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="@Url.Action("Details", "Households", new { id = user.HouseholdId})">
+                <a class="nav-link" href="@Url.Action("Details", "Households", new { id = user.HouseholdId.Value })">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>@houseHelper.FindHouse(user.HouseholdId.Value)</span>
+                    <span>@houseHelper.FindHouse(user.HouseholdId.GetValueOrDefault())</span>
                 </a>
             </li>
             <li>
@@ -87,10 +88,10 @@
                             <a class="collapse-item" href="@Url.Action("Details","Households", new { id = user.HouseholdId })">Details</a>
                             <a class="collapse-item" href="@Url.Action("Create","Invitations")">Invite</a>
                             <a class="collapse-item" href="#" data-toggle="modal" data-target="#ModalLeave">Leave</a>
-                            if (!houseHelper.IsConfigured(user.Id))
+                            @*if (!houseHelper.IsConfigured(user.Id))
                             {
                                 <a class="collapse-item" href="@Url.Action("Configure","Households", new { id = user.HouseholdId })">Configure</a>
-                            }
+                            }*@
                         }
                         else
                         {

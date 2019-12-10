@@ -17,6 +17,9 @@
                                 Owner
                             </th>
                             <th>
+                                Created On
+                            </th>
+                            <th>
                                 Account Name
                             </th>
                             <th>
@@ -44,6 +47,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Owner.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Created)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
