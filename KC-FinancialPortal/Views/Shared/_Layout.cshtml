@@ -114,6 +114,18 @@
                 <hr class="sidebar-divider">
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBudgets" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-money-bill"></i>
+                    <span>Budgets</span>
+                </a>
+                <div id="collapseBudgets" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-collapse py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="~/Budgets/Create">Create New Budget</a>
+                        <a class="collapse-item" href="~/Budgets/Index">View All Budgets</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransactions" aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-money-bill"></i>
                     <span>Transactions</span>
@@ -270,10 +282,6 @@
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="@Url.Action("LogOut","Account")">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -292,7 +300,7 @@
 
     @*Modal - Leave Household*@
     <div class="modal fade" id="ModalLeave">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content border-bottom-danger">
                 <div class="modal-header">
                     <h4 class="modal-title">Leave Household?</h4>
@@ -329,9 +337,7 @@
                     }
 
                 </div>
-                <div class="modal-footer">
 
-                </div>
             </div>
         </div>
     </div>

@@ -39,7 +39,7 @@ namespace KC_FinancialPortal.Controllers
         // GET: BudgetItems/Create
         public ActionResult Create()
         {
-            ViewBag.BudgetId = new SelectList(db.Budgets, "Id", "OwnerId");
+            ViewBag.BudgetId = new SelectList(db.Budgets, "Id", "Name");
             return View();
         }
 
@@ -48,11 +48,12 @@ namespace KC_FinancialPortal.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,BudgetId,Created,Name,TargetAmount,CurrentAmount")] BudgetItem budgetItem)
+        public ActionResult Create([Bind(Include = "BudgetId,Name,TargetAmount,CurrentAmount")] BudgetItem budgetItem)
         {
             if (ModelState.IsValid)
             {
                 db.BudgetItems.Add(budgetItem);
+                budgetItem.Created = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

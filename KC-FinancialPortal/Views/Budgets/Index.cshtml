@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<KC_FinancialPortal.Models.Budget>
+@using KC_FinancialPortal.Models
+@using Microsoft.AspNet.Identity
 
+@{ 
+    var db = new ApplicationDbContext();
+    var user = db.Users.Find(User.Identity.GetUserId());
+}
 
 <div class="container-fluid">
     <div class="card shadow mb-4">
@@ -15,7 +21,7 @@
                                 @Html.DisplayNameFor(model => model.Household.Name)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Owner.FirstName)
+                                Account Owner
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Created)
@@ -33,7 +39,7 @@
                         </tr>
                     </thead>
 
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.Where(b => b.HouseholdId == user.HouseholdId))
                     {
                         <tbody>
                             <tr>
@@ -41,7 +47,7 @@
                                     @Html.DisplayFor(modelItem => item.Household.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Owner.FirstName)
+                                    @Html.DisplayFor(modelItem => item.Owner.FullName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Created)
@@ -56,6 +62,7 @@
                                     @Html.DisplayFor(modelItem => item.CurrentAmount)
                                 </td>
                                 <td>
+                                    <a href="@Url.Action("Create", "BudgetItems")">Add Item</a> |
                                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
@@ -97,7 +104,6 @@
         </div>
     </div>
 </div>
-
 
 @section scripts{
     <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>

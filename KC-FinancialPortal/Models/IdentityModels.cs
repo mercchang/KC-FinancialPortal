@@ -88,5 +88,7 @@ namespace KC_FinancialPortal.Models
 
         public System.Data.Entity.DbSet<KC_FinancialPortal.Models.Transaction> Transactions { get; set; }
         public IEnumerable ApplicationUsers { get; internal set; }
+
+        public System.Data.Entity.DbSet<KC_FinancialPortal.Models.UserProfileViewModel> UserProfileViewModels { get; set; }
     }
 }

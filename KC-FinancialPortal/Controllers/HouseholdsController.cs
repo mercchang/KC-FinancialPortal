@@ -236,6 +236,11 @@ namespace KC_FinancialPortal.Controllers
             }
         }
 
+        //public ActionResult JoinHousehold(string userId, int householdId)
+        //{
+
+        //}
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public ActionResult ChooseSuccessor(string newHead)

@@ -19,6 +19,9 @@
                     <thead>
                         <tr>
                             <th>
+                                Account Name
+                            </th>
+                            <th>
                                 Household
                             </th>
                             <th>
@@ -26,9 +29,6 @@
                             </th>
                             <th>
                                 Created On
-                            </th>
-                            <th>
-                                Account Name
                             </th>
                             <th>
                                 Account Type
@@ -51,6 +51,9 @@
                         <tbody>
                             <tr>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
                                     @Html.DisplayFor(modelItem => item.Household.Name)
                                 </td>
                                 <td>
@@ -58,9 +61,6 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Created)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.AccountType)

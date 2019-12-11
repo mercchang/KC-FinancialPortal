@@ -33,7 +33,7 @@ namespace KC_FinancialPortal.Extensions
         //public static async Task MarkAsInvalid(this Invitation invitation)
         //{
         //    var db = new ApplicationDbContext();
-
+            
 
         //}
     }

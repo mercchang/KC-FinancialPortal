@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using KC_FinancialPortal.Helpers;
 using KC_FinancialPortal.Models;
+using KC_FinancialPortal.Extensions;
 using Microsoft.AspNet.Identity;
 
 namespace KC_FinancialPortal.Controllers
@@ -42,9 +43,10 @@ namespace KC_FinancialPortal.Controllers
         // GET: Transactions/Create
         public ActionResult Create()
         {
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "OwnerId");
+            //var houseId = db.Users.Find(User.Identity.GetUserId()).HouseholdId ?? 0;
+            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
+            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "Name");
             ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name");
-            ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName");
 
             return View();
         }
@@ -54,20 +56,23 @@ namespace KC_FinancialPortal.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,BankAccountId,BudgetItemId,OwnerId,TransactionType,Created,Amount,Memo")] Transaction transaction)
+        public ActionResult Create([Bind(Include = "BankAccountId,BudgetItemId,TransactionType,Amount,Memo")] Transaction transaction)
         {
             var user = db.Users.Find(User.Identity.GetUserId());
             if (ModelState.IsValid)
             {
                 transaction.OwnerId = User.Identity.GetUserId();
-                transaction.BankAccountId = db.BankAccounts.Where(h => h.HouseholdId == user.HouseholdId).FirstOrDefault().Id;
+                //transaction.BankAccountId = db.BankAccounts.Where(h => h.HouseholdId == user.HouseholdId).FirstOrDefault().Id;
                 transaction.Created = DateTime.Now;
                 db.Transactions.Add(transaction);
                 db.SaveChanges();
+
+                transaction.UpdateBalance();
+                //transaction.ManageNotificaions();
+                
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "OwnerId", transaction.BankAccountId);
             ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
             ViewBag.OwnerId = new SelectList(db.Users, "Id", "FirstName", transaction.OwnerId);
             return View(transaction);
