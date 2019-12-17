@@ -18,6 +18,7 @@ namespace KC_FinancialPortal.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         public ManageController()
         {
@@ -344,7 +345,9 @@ namespace KC_FinancialPortal.Controllers
             if (sourceUser.AvatarPath == null)
             {
                 sourceUser.AvatarPath = "/Avatars/default_user.png";
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
             }
             var userVm = new UserProfileViewModel();
             userVm.Id = sourceUser.Id;
@@ -384,7 +387,9 @@ namespace KC_FinancialPortal.Controllers
                 }
             }
 
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
 
             return RedirectToAction("Profile", "Account");
         }

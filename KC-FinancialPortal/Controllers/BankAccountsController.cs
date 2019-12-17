@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using KC_FinancialPortal.Helpers;
 using KC_FinancialPortal.Models;
 using Microsoft.AspNet.Identity;
 
@@ -14,6 +15,7 @@ namespace KC_FinancialPortal.Controllers
     public class BankAccountsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         // GET: BankAccounts
         public ActionResult Index()
@@ -62,7 +64,10 @@ namespace KC_FinancialPortal.Controllers
                     bankAccount.HouseholdId = user.HouseholdId.Value;
                     bankAccount.Created = DateTime.Now;
                     db.BankAccounts.Add(bankAccount);
-                    db.SaveChanges();
+
+                    var userr = User.Identity.GetUserId();
+                    if (!roleHelper.IsDemoUser(userr))
+                        db.SaveChanges();
                 }
 
                 return RedirectToAction("Index");
@@ -100,7 +105,10 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(bankAccount).State = EntityState.Modified;
-                db.SaveChanges();
+
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
@@ -133,7 +141,9 @@ namespace KC_FinancialPortal.Controllers
             {
                 bankAccount.CurrentBalance = balance;
                 db.Entry(bankAccount).State = EntityState.Modified;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(bankAccount);
@@ -161,7 +171,9 @@ namespace KC_FinancialPortal.Controllers
         {
             BankAccount bankAccount = db.BankAccounts.Find(id);
             db.BankAccounts.Remove(bankAccount);
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
             return RedirectToAction("Index");
         }
 

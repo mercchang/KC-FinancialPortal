@@ -6,13 +6,16 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using KC_FinancialPortal.Helpers;
 using KC_FinancialPortal.Models;
+using Microsoft.AspNet.Identity;
 
 namespace KC_FinancialPortal.Controllers
 {
     public class BudgetItemsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         // GET: BudgetItems
         public ActionResult Index()
@@ -54,7 +57,9 @@ namespace KC_FinancialPortal.Controllers
             {
                 db.BudgetItems.Add(budgetItem);
                 budgetItem.Created = DateTime.Now;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -88,7 +93,9 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(budgetItem).State = EntityState.Modified;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.BudgetId = new SelectList(db.Budgets, "Id", "OwnerId", budgetItem.BudgetId);
@@ -117,7 +124,9 @@ namespace KC_FinancialPortal.Controllers
         {
             BudgetItem budgetItem = db.BudgetItems.Find(id);
             db.BudgetItems.Remove(budgetItem);
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
             return RedirectToAction("Index");
         }
 

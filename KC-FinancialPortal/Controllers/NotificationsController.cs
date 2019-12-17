@@ -6,13 +6,16 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using KC_FinancialPortal.Helpers;
 using KC_FinancialPortal.Models;
+using Microsoft.AspNet.Identity;
 
 namespace KC_FinancialPortal.Controllers
 {
     public class NotificationsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         // GET: Notifications
         public ActionResult Index()
@@ -54,7 +57,9 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Notifications.Add(notification);
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -90,7 +95,9 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(notification).State = EntityState.Modified;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", notification.HouseholdId);
@@ -120,7 +127,9 @@ namespace KC_FinancialPortal.Controllers
         {
             Notification notification = db.Notifications.Find(id);
             db.Notifications.Remove(notification);
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
             return RedirectToAction("Index");
         }
 

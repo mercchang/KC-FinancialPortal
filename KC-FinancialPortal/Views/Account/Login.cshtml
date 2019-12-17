@@ -68,6 +68,20 @@
                                     <div class="text-center">
                                         @Html.ActionLink("Create an Account", "Register", null, new { @class = "small" })
                                     </div>
+                                    <hr />
+
+                                    @using (Html.BeginForm("DemoLoginAsync", "Account", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("emailKey", "DemoEmail")
+                                        <div class="text-center pb-3">
+                                            Want to test the Financial Portal? Use a 
+                                        </div>
+                                        <div class="row justify-content-center"><button type="submit" class="btn btn-info">Demo Account</button></div>
+                                    }
+                                    <div class="text-center pt-3">
+                                        <p class="small" style="color: red">Actions performed by a demo user are not saved.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

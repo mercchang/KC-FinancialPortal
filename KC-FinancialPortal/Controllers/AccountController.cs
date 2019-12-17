@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using KC_FinancialPortal.Models;
 using KC_FinancialPortal.Helpers;
 using System.IO;
+using System.Web.Configuration;
 
 namespace KC_FinancialPortal.Controllers
 {
@@ -92,6 +93,25 @@ namespace KC_FinancialPortal.Controllers
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DemoLoginAsync(string emailKey)
+        {
+            var email = WebConfigurationManager.AppSettings[emailKey];
+            var password = WebConfigurationManager.AppSettings["DemoPass"];
+            var result = await SignInManager.PasswordSignInAsync(email, password, false, shouldLockout: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Index", "Home");
+                case SignInStatus.Failure:
+                default:
+                    return RedirectToAction("Login", "Account");
             }
         }
 

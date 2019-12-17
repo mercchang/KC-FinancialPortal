@@ -2048,6 +2048,7 @@
     <Content Include="Views\Households\Configure.cshtml" />
     <Content Include="Views\BankAccounts\EditBalance.cshtml" />
     <Content Include="Views\Manage\EditProfile.cshtml" />
+    <None Include="Properties\PublishProfiles\KC-FinancialPortal - Web Deploy.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using KC_FinancialPortal.Helpers;
 using KC_FinancialPortal.Models;
 using Microsoft.AspNet.Identity;
 
@@ -14,6 +15,7 @@ namespace KC_FinancialPortal.Controllers
     public class BudgetsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         // GET: Budgets
         public ActionResult Index()
@@ -60,7 +62,9 @@ namespace KC_FinancialPortal.Controllers
                 budget.OwnerId = user.Id;
                 budget.Created = DateTime.Now;
                 db.Budgets.Add(budget);
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -96,7 +100,9 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(budget).State = EntityState.Modified;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budget.HouseholdId);
@@ -126,7 +132,9 @@ namespace KC_FinancialPortal.Controllers
         {
             Budget budget = db.Budgets.Find(id);
             db.Budgets.Remove(budget);
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
             return RedirectToAction("Index");
         }
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using KC_FinancialPortal.Extensions;
+using KC_FinancialPortal.Helpers;
 using KC_FinancialPortal.Models;
 using Microsoft.AspNet.Identity;
 
@@ -16,6 +17,7 @@ namespace KC_FinancialPortal.Controllers
     public class InvitationsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private RoleHelper roleHelper = new RoleHelper();
 
         // GET: Invitations
         public ActionResult Index()
@@ -68,7 +70,9 @@ namespace KC_FinancialPortal.Controllers
                 invitation.Code = Guid.NewGuid();
                 invitation.IsValid = true;
                 db.Invitations.Add(invitation);
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
 
                 await invitation.EmailInvitation();
 
@@ -104,7 +108,9 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(invitation).State = EntityState.Modified;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", invitation.HouseholdId);
@@ -133,7 +139,9 @@ namespace KC_FinancialPortal.Controllers
         {
             Invitation invitation = db.Invitations.Find(id);
             db.Invitations.Remove(invitation);
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
             return RedirectToAction("Index");
         }
 

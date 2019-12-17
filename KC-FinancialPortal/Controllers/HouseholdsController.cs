@@ -61,10 +61,12 @@ namespace KC_FinancialPortal.Controllers
                 household.Users.Add(db.Users.Find(User.Identity.GetUserId()));
                 roleHelper.RemoveUserFromRole(User.Identity.GetUserId(), "UnAssigned");
                 roleHelper.AddUserToRole(User.Identity.GetUserId(), "HeadOfHousehold");
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
-            return View(household);
+            return RedirectToAction("Details", "Households", new { id = household.Id });
         }
 
         // GET: Households/Edit/5
@@ -92,7 +94,9 @@ namespace KC_FinancialPortal.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(household).State = EntityState.Modified;
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
                 return RedirectToAction("Details", "Households", new { id = household.Id});
             }
             return View(household);
@@ -127,7 +131,9 @@ namespace KC_FinancialPortal.Controllers
                 db.BankAccounts.Remove(bank);
 
             db.Households.Remove(household);
-            db.SaveChanges();
+            var userr = User.Identity.GetUserId();
+            if (!roleHelper.IsDemoUser(userr))
+                db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
 
@@ -138,6 +144,7 @@ namespace KC_FinancialPortal.Controllers
             //Determine Role
             var myRole = roleHelper.ListUserRoles(userId).FirstOrDefault();
             var user = db.Users.Find(userId);
+            var userr = User.Identity.GetUserId();
 
             switch(myRole)
             {
@@ -157,7 +164,9 @@ namespace KC_FinancialPortal.Controllers
 
                     //Household is deleted
                     db.Households.Remove(household);
-                    db.SaveChanges();
+                    
+                    if (!roleHelper.IsDemoUser(userr))
+                        db.SaveChanges();
 
                     await ControllerContext.HttpContext.RefreshAuthentication(user);
 
@@ -167,7 +176,8 @@ namespace KC_FinancialPortal.Controllers
                 default:
                     user.HouseholdId = null;
                     roleHelper.RemoveUserFromRole(userId, "Member");
-                    db.SaveChanges();
+                    if (!roleHelper.IsDemoUser(userr))
+                        db.SaveChanges();
                     await ControllerContext.HttpContext.RefreshAuthentication(user);
                     return RedirectToAction("Index", "Home");
             }
@@ -226,7 +236,9 @@ namespace KC_FinancialPortal.Controllers
                 };
 
                 db.BudgetItems.Add(newBudgetItem);
-                db.SaveChanges();
+                var userr = User.Identity.GetUserId();
+                if (!roleHelper.IsDemoUser(userr))
+                    db.SaveChanges();
 
                 return RedirectToAction("Index", "Home");
             }
@@ -250,7 +262,7 @@ namespace KC_FinancialPortal.Controllers
 
         //    //remove user from head
         //    roleHelper.RemoveUserFromRole(User.Identity.GetUserId(), "HeadOfHousehold");
-        //    await ControllerContext.HttpContext.RefreshAuthentication(me);
+        //    await ControllerContext.HttpContext.RefreshAuthentication(user);
 
         //    roleHelper.RemoveUserFromRole(newHead, "Member");
 
