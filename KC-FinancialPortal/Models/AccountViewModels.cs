@@ -116,6 +116,13 @@ namespace KC_FinancialPortal.Models
         public int HouseholdId { get; set; }
     }
 
+    public class AcceptInvitationWithAcctViewModel : LoginViewModel
+    {
+        public int Id { get; set; }
+        public Guid Code { get; set; }
+        public int HouseholdId { get; set; }
+    }
+
     public class ResetPasswordViewModel
     {
         [Required]

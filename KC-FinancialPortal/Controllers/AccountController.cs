@@ -224,6 +224,7 @@ namespace KC_FinancialPortal.Controllers
 
         //Accept Invitation
         //GET
+        [AllowAnonymous]
         public ActionResult AcceptInvitation(string recipientEmail, string code)
         {
             var realGuid = Guid.Parse(code);
@@ -236,7 +237,7 @@ namespace KC_FinancialPortal.Controllers
             if (invitation.IsValid && DateTime.Now < expirationDate)
             {
                 var householdName = db.Households.Find(invitation.HouseholdId).Name;
-                ViewBag.Greeting = $"<center> Thank you for accepting my invitation to join {householdName}. </center> <br/> Thank";
+                ViewBag.Greeting = $"<center> Thank you for accepting my invitation to join {householdName}! </center>";
 
                 var invitationVm = new AcceptInvitationViewModel
                 {
@@ -252,10 +253,11 @@ namespace KC_FinancialPortal.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AcceptInvitation(AcceptInvitationViewModel invitationVm)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
                 {
@@ -269,9 +271,9 @@ namespace KC_FinancialPortal.Controllers
                 };
 
                 var result = await UserManager.CreateAsync(user, invitationVm.Password);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
-                    //InvitationHelper.MarkAsInvalid(invitationVm.Id);
+                    InvitationHelper.MarkAsInvalid(invitationVm.Id);
                     roleHelper.AddUserToRole(user.Id, "Member");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
@@ -280,6 +282,75 @@ namespace KC_FinancialPortal.Controllers
             }
 
             return View();
+        }
+
+        //Accept Invitation with Existing Account
+        //GET
+        [AllowAnonymous]
+        public ActionResult AcceptInvitationWithAcct(string recipientEmail, string code)
+        {
+            var realGuid = Guid.Parse(code);
+            var invitation = db.Invitations.FirstOrDefault(i => i.RecipientEmail == recipientEmail && i.Code == realGuid);
+
+            if (invitation == null)
+                return View("NotFoundError", invitation);
+
+            var expirationDate = invitation.Created.AddDays(invitation.TTL);
+            if (invitation.IsValid && DateTime.Now < expirationDate)
+            {
+                var householdName = db.Households.Find(invitation.HouseholdId).Name;
+                ViewBag.Greeting = $"<center> Thank you for accepting my invitation to join {householdName}! </center>";
+
+                var invitationVm = new AcceptInvitationWithAcctViewModel
+                {
+                    Id = invitation.Id,
+                    Email = recipientEmail,
+                    Code = realGuid,
+                    HouseholdId = invitation.HouseholdId
+                };
+
+                return View(invitationVm);
+            }
+            return View("AcceptError", invitation);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AcceptInvitationWithAcct(AcceptInvitationWithAcctViewModel invitationVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(invitationVm);
+            }
+
+            var existingUser = db.Users.FirstOrDefault(u => u.Email == invitationVm.Email);
+            existingUser.HouseholdId = invitationVm.HouseholdId;
+
+            if (!roleHelper.IsDemoUser(db.Users.FirstOrDefault(u => u.Email == invitationVm.Email).Id))
+            {
+                InvitationHelper.MarkAsInvalid(invitationVm.Id);
+                roleHelper.RemoveUserFromRole(db.Users.FirstOrDefault(u => u.Email == invitationVm.Email).Id, "UnAssigned");
+                roleHelper.AddUserToRole(db.Users.FirstOrDefault(u => u.Email == invitationVm.Email).Id, "Member");
+            }
+
+            if (!roleHelper.IsDemoUser(existingUser.Id))
+                db.SaveChanges();
+
+            var result = await SignInManager.PasswordSignInAsync(invitationVm.Email, invitationVm.Password, false, shouldLockout: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    //InvitationHelper.MarkAsInvalid(invitationVm.Id);
+                    return RedirectToAction("Index", "Home");
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(invitationVm);
+            }
         }
 
         //

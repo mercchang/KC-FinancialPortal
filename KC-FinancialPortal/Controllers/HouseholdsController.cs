@@ -137,6 +137,13 @@ namespace KC_FinancialPortal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        //public async Task<ActionResult> PromoteToHead(string newHeadUser)
+        //{
+        //    // remove current head from HeadofHousehold & assign Member role
+        //    // then add new member to Head
+
+        //}
+
         public async Task<ActionResult> LeaveAsync()
         {
             var userId = User.Identity.GetUserId();

@@ -30,11 +30,12 @@ namespace KC_FinancialPortal.Extensions
             await svc.SendAsync(emailMessage);
         }
 
-        //public static async Task MarkAsInvalid(this Invitation invitation)
-        //{
-        //    var db = new ApplicationDbContext();
-            
-
-        //}
+        public static async Task MarkAsInvalid(this Invitation invitation)
+        {
+            var db = new ApplicationDbContext();
+            db.Invitations.Attach(invitation);
+            invitation.IsValid = false;
+            await db.SaveChangesAsync();
+        }
     }
 }

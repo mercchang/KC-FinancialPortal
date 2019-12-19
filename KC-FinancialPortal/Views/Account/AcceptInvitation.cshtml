@@ -1,4 +1,5 @@
 ﻿@model KC_FinancialPortal.Models.AcceptInvitationViewModel
+
 @{
     ViewBag.Title = "AcceptInvitation";
     Layout = null;
@@ -28,61 +29,93 @@
 <body class="loginbg">
     <div class="container">
         <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Please create an account or log in to accept this Invitation</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card-body p-0">
                 <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Please create an account to accept this Invitation</h1>
-                            </div>
+                                <h1 class="h4 text-gray-900 mb-4">Create Account</h1>
+                                @using (Html.BeginForm("AcceptInvitation", "Account"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(model => model.Id)
+                                    @Html.HiddenFor(model => model.Code)
+                                    @Html.HiddenFor(model => model.HouseholdId)
 
-                            @using (Html.BeginForm())
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                                        </div>
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(m => m.DisplayName, new { @class = "form-control", placeholder = "Display Name" })
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                            <p>Choose Avatar:</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            @Html.TextBox("Avatar", null, new { type = "file", placeholder = "Choose Avatar" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                                        </div>
+                                        <div class="col-sm-6">
+                                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password" })
+                                        </div>
+                                    </div>
+                                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Register" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Log In</h1>
+                            </div>
+                            @using (Html.BeginForm("AcceptInvitationWithAcct", "Account"))
                             {
                                 @Html.AntiForgeryToken()
                                 @Html.HiddenFor(model => model.Id)
                                 @Html.HiddenFor(model => model.Code)
                                 @Html.HiddenFor(model => model.HouseholdId)
 
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
-                                    </div>
-                                    <div class="col-sm-6">
-                                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
-                                    </div>
-                                </div>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                 <div class="form-group">
-                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address" })
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-user", placeholder = "Enter Email Address..." })
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                                 </div>
+
                                 <div class="form-group">
-                                    @Html.TextBoxFor(m => m.DisplayName, new { @class = "form-control", placeholder = "Display Name" })
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-user", placeholder = "Enter Password..." })
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-3 mb-3 mb-sm-0">
-                                        <p>Choose Avatar:</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        @Html.TextBox("Avatar", null, new { type = "file", placeholder = "Choose Avatar" })
-                                    </div>
+                                <div class="form-group text-center">
+                                    <input type="submit" value="Log in" class="btn btn-primary btn-user btn-block" />
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
-                                    </div>
-                                    <div class="col-sm-6">
-                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password" })
-                                    </div>
-                                </div>
-                                <input type="submit" class="btn btn-primary btn-user btn-block" value="Register" />
                             }
 
-                            <hr>
+                            <hr/>
                             <div class="text-center">
                                 <a class="small" href="#">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="~/Account/Login">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>

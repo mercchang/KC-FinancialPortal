@@ -86,11 +86,14 @@
                                     Username
                                 </th>
                                 <th>
+                                    Role
+                                </th>
+                                <th>
                                     Email
                                 </th>
                                 @if (User.IsInRole("Administrator") || role == "Head Of Household")
                                 {
-                                    <th></th>
+                                    <th>Promote to Head of Household</th>
                                 }
 
                             </tr>
@@ -106,13 +109,19 @@
                                         @Html.DisplayFor(house => user.DisplayName)
                                     </td>
                                     <td>
+                                        @roleHelper.GetRoleName(user.Id)
+                                    </td>
+                                    <td>
                                         @Html.DisplayFor(house => user.Email)
                                     </td>
                                     @if (User.IsInRole("Administrator") || role == "Head Of Household")
                                     {
                                         <td>
-                                            Remove Member
                                             @*@Html.ActionLink("Remove Member", "Delete", new { id = user.Id })*@
+                                            @*@using (Html.BeginForm("PromoteToHead", "Households"))
+                                            {
+
+                                            }*@
                                         </td>
                                     }
                                 </tr>
