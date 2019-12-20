@@ -15,7 +15,7 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.BankAccount.OwnerId)
+                                Owner
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.BudgetItem.Name)
@@ -44,7 +44,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.BankAccount.OwnerId)
+                                    @Html.DisplayFor(modelItem => item.BankAccount.Owner.FullName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.BudgetItem.Name)

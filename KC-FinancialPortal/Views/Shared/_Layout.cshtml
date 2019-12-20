@@ -92,7 +92,11 @@
                                 <a class="collapse-item" href="@Url.Action("Configure","Households", new { id = user.HouseholdId })">Configure</a>
                             }
                         }
-                        <a class="collapse-item" href="@Url.Action("Create","Households")">Create New</a>
+                        else
+                        {
+                            <a class="collapse-item" href="@Url.Action("Create","Households")">Create New</a>
+                        }
+                        
                     </div>
                 </div>
             </li>
@@ -334,7 +338,7 @@
                                 </button>
                                 <h6 class="button-text">Back</h6>
                             </div>
-                            @if (!roleHelper.IsDemoUser(User.Identity.GetUserId()))
+                            @if (!roleHelper.IsDemoUser(user.Id))
                             {
                                 <div class="col text-center">
                                     @*Leave Household*@

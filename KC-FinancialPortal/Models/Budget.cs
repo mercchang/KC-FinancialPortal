@@ -19,13 +19,11 @@ namespace KC_FinancialPortal.Models
         public virtual ApplicationUser Owner { get; set; }
 
         public virtual ICollection<BudgetItem> BudgetItems { get; set; }
-        public virtual ICollection<Transaction> Transactions { get; set; }
 
         //constructor
         public Budget()
         {
             BudgetItems = new HashSet<BudgetItem>();
-            Transactions = new HashSet<Transaction>();
         }
     }
 }

@@ -168,7 +168,7 @@ namespace KC_FinancialPortal.Controllers
                     user.HouseholdId = null;
                     //Role removed from user
                     roleHelper.RemoveUserFromRole(userId, "HeadOfHousehold");
-
+                    roleHelper.AddUserToRole(userId, "UnAssigned");
                     //Household is deleted
                     db.Households.Remove(household);
                     
@@ -183,6 +183,8 @@ namespace KC_FinancialPortal.Controllers
                 default:
                     user.HouseholdId = null;
                     roleHelper.RemoveUserFromRole(userId, "Member");
+                    roleHelper.AddUserToRole(userId, "UnAssigned");
+
                     if (!roleHelper.IsDemoUser(userr))
                         db.SaveChanges();
                     await ControllerContext.HttpContext.RefreshAuthentication(user);
